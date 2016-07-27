@@ -1,4 +1,5 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -7,9 +8,16 @@ import java.util.List;
 public class GenericSelenium {
 
     private static WebDriver driver;
+    private static JavascriptExecutor js;
 
     public void setDriver(WebDriver driver) {
+
         this.driver = driver;
+        js = (JavascriptExecutor)driver;
+     }
+
+    public void setJs(JavascriptExecutor js) {
+        this.js = js;
     }
 
     public boolean header() {
@@ -36,4 +44,36 @@ public class GenericSelenium {
         return result;
     }
 
+    public boolean stickyHeaderShows() {
+        boolean result = false;
+        String startTopValue = driver.findElement(By.id("stickyHeader")).getCssValue("top");
+        js.executeScript("window.scrollTo(0, 180);");
+        String endTopValue = driver.findElement(By.id("stickyHeader")).getCssValue("top");
+        if (startTopValue.equals("-50px") && endTopValue.equals("0px")) {
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean stickyHeaderHides() {
+        boolean result = false;
+        js.executeScript("window.scrollTo(0, 180);");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        String startTopValue = driver.findElement(By.id("stickyHeader")).getCssValue("top");
+        System.out.println(startTopValue);
+        js.executeScript("window.scrollTo(0, 0);");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        String endTopValue = driver.findElement(By.id("stickyHeader")).getCssValue("top");
+        System.out.println(endTopValue);
+        if (startTopValue.equals("0px") && endTopValue.equals("-50px")) {
+            result = true;
+        }
+        return result;
+    }
 }

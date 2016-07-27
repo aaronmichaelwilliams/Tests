@@ -1,7 +1,9 @@
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.junit.Assert.*;
 
@@ -9,13 +11,17 @@ public class WriteAReviewSeleniumTest {
 
     WriteAReviewSelenium writeReview;
     SeleniumFunctions sf = new SeleniumFunctions();
-    WebDriver driver = sf.getDriver("Chrome");
+    GenericSelenium gs = new GenericSelenium();
+    WebDriver driver = sf.getDriver("FireFox");
+    HtmlUnitDriver unitDriver = sf.getUnitDriver();
 
     @Before
     public void setUp() throws Exception {
         writeReview = new WriteAReviewSelenium();
-        writeReview.setDriver(driver);
-        writeReview.goToPage();
+        //writeReview.setDriver(driver);
+        //gs.setDriver(driver);
+        //writeReview.goToPage();
+        writeReview.setUnitDriver(unitDriver);
     }
 
     @After
@@ -25,14 +31,12 @@ public class WriteAReviewSeleniumTest {
 
     @Test
     public void goToPage() throws Exception {
-        writeReview.goToPage();
         String result = writeReview.checkPage();
         assertTrue(result.contains("Write Review") ? true : false);
     }
 
     @Test
     public void testBreadcrumb() {
-        writeReview.goToPage();
         String textReturned = writeReview.breadcrumb();
         String textReturnedSplit[] = textReturned.split(" > ");
         boolean result = false;
@@ -49,17 +53,34 @@ public class WriteAReviewSeleniumTest {
     }
 
     @Test
-    public void testFormTabIndex() { assertTrue(writeReview.tabIndex()); }
+    public void testFormTabIndex() {
+        assertTrue(writeReview.tabIndex());
+    }
+
+    @Test
+    public void testValidationFailsAfterFieldClear() {
+        assertTrue(writeReview.validationFailsAfterFieldClear());
+    }
+
+    @Test
+    public void testFormInput() {
+        writeReview.formInput();
+    }
 
     @Test
     public void testHeader() {
-        GenericSelenium gs = new GenericSelenium();
-        gs.setDriver(driver);
         assertTrue(gs.header());
     }
 
     @Test
-    public void testStickyHeader() {
+    public void testStickyHeaderShows() {
+        assertTrue(gs.stickyHeaderShows());
+
+    }
+
+    @Test
+    public void testStickyHeaderHides() {
+        assertTrue(gs.stickyHeaderHides());
 
     }
 
@@ -77,4 +98,10 @@ public class WriteAReviewSeleniumTest {
     public void testBackToTop() {
 
     }
+
+    @Test
+    public void testing() {
+        assertTrue(writeReview.testing().contains("Google"));
+    }
+
 }

@@ -1,18 +1,22 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WriteAReviewSelenium {
 
     private static WebDriver driver;
+    private static HtmlUnitDriver unitDriver;
+    private static JavascriptExecutor js;
 
     public void setDriver(WebDriver driver) {
         this.driver = driver;
+        js = (JavascriptExecutor)driver;
+    }
+
+    public void setUnitDriver(HtmlUnitDriver unitDriver) {
+        this.unitDriver = unitDriver;
     }
 
     public void goToPage() {
@@ -134,7 +138,31 @@ public class WriteAReviewSelenium {
             result = true;
         }
         return result;
+    }
 
+    public boolean validationFailsAfterFieldClear() {
+        /* TO FINISH AFTER VALIDATION IS COMPLETED */
+        boolean result = false;
+        driver.findElement(By.name("name")).sendKeys("Text input!");
+        driver.findElement(By.name("name")).clear();
+        driver.findElement(By.tagName("button")).click();
+        return result;
+    }
+
+    public void formInput() {
+        /* TO FINISH AFTER VALIDATION IS COMPLETED */
+        Select heatDownDown = new Select(driver.findElement(By.name("heat")));
+        heatDownDown.selectByIndex(3);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String testing() {
+        unitDriver.get("http://www.google.com");
+        return unitDriver.getTitle();
     }
 
 }
