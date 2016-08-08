@@ -8,13 +8,16 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.security.Credentials;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class SeleniumFunctions {
@@ -67,9 +70,13 @@ public class SeleniumFunctions {
             }
     }
 
+    public LogEntries getBrowserLog(WebDriver driver) {
+        LogEntries logs = driver.manage().logs().get("browser");
+        return logs;
+    }
+
     public void closeAlert(WebDriver driver) {
         Alert alert = driver.switchTo().alert();
-        alert.dismiss();
         driver.switchTo().parentFrame();
     }
 
@@ -80,6 +87,16 @@ public class SeleniumFunctions {
     public void positionWindow(WebDriver driver, int x, int y) {
         Point points = new Point(x, y);
         driver.manage().window().setPosition(points);
+    }
+
+    public String getWindowSize() {
+        Dimension dim = driver.manage().window().getSize();
+        return dim.getWidth() + "x" + dim.getHeight();
+    }
+
+    public void setWindowSize(int width, int height) {
+        Dimension dim = new Dimension(width, height);
+        driver.manage().window().setSize(dim);
     }
 
     public String getLocationOfElement(WebDriver driver, WebElement element) {
@@ -142,7 +159,6 @@ public class SeleniumFunctions {
                                                     WebElement to) {
         Actions action = new Actions(driver);
         action.clickAndHold(element).moveToElement(to).release(to).build();
-
     }
 
 }
